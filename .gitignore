@@ -1,19 +1,12 @@
+# Local configuration and installed dependencies.
 /vendor/
 /node_modules/
-.env
 
+# Runtime files generated on each environment.
 /storage/logs/*
 !/storage/logs/.gitkeep
 /storage/cache/*
 !/storage/cache/.gitkeep
 /storage/sessions/*
 !/storage/sessions/.gitkeep
-
-/public/uploads/dokumen/*
-!/public/uploads/dokumen/.gitkeep
-/public/uploads/foto/*
-!/public/uploads/foto/.gitkeep
-/public/uploads/slip_gaji/*
-!/public/uploads/slip_gaji/.gitkeep
-
 .phpunit.result.cache
