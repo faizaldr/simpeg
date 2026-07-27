@@ -38,10 +38,25 @@ $role = Auth::currentRole();
                     <span class="navbar-brand mb-0">SIMPEG</span>
                 </li>
             </ul>
-            <span class="ms-auto text-muted small">
-                <?= htmlspecialchars($_SESSION['username'] ?? '-') ?> (<?= htmlspecialchars($role ?? '-') ?>)
-                &middot; <a href="/auth/logout.php">Keluar</a>
-            </span>
+            <ul class="navbar-nav ms-auto">
+                <!-- Menu akun: satu-satunya jalur tampilan menuju profil, ganti kata sandi,
+                     foto dari URL, dan preferensi dashboard — sebelumnya halaman-halaman ini
+                     tidak punya tautan sama sekali di UI. -->
+                <li class="nav-item dropdown user-menu">
+                    <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="bi bi-person-circle me-1"></i>
+                        <span><?= htmlspecialchars($_SESSION['username'] ?? '-') ?> (<?= htmlspecialchars($role ?? '-') ?>)</span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a href="/karyawan/profil.php" class="dropdown-item"><i class="bi bi-person me-2"></i>Profil Saya</a></li>
+                        <li><a href="/karyawan/ganti_password.php" class="dropdown-item"><i class="bi bi-key me-2"></i>Ganti Kata Sandi</a></li>
+                        <li><a href="/karyawan/foto_dari_url.php" class="dropdown-item"><i class="bi bi-image me-2"></i>Foto Profil dari URL</a></li>
+                        <li><a href="/dashboard/preferensi.php" class="dropdown-item"><i class="bi bi-sliders me-2"></i>Preferensi Dashboard</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a href="/auth/logout.php" class="dropdown-item text-danger"><i class="bi bi-box-arrow-right me-2"></i>Keluar</a></li>
+                    </ul>
+                </li>
+            </ul>
         </div>
     </nav>
     <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">

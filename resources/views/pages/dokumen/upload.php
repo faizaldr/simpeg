@@ -18,3 +18,4 @@
     </div>
     <button class="btn btn-primary">Unggah</button>
 </form>
+<p class="mt-3"><a href="/dokumen/convert.php">Konversi dokumen kontrak (DOCX) ke PDF &rarr;</a></p>

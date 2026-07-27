@@ -20,7 +20,11 @@
         <tr>
             <td><?= htmlspecialchars($row['nik']) ?></td>
             <td><?= htmlspecialchars($row['nama']) ?></td>
-            <td><a href="/karyawan/detail.php?id=<?= (int) $row['id'] ?>">Detail</a></td>
+            <td>
+                <a href="/karyawan/detail.php?id=<?= (int) $row['id'] ?>">Detail</a>
+                &middot;
+                <a href="/karyawan/hapus.php?id=<?= (int) $row['id'] ?>" class="text-danger" onclick="return confirm('Hapus pegawai ini?')">Hapus</a>
+            </td>
         </tr>
     <?php endforeach; ?>
     </tbody>
