@@ -1,0 +1,54 @@
+{
+    "name": "inixindo/simpeg-lab",
+    "description": "SIMPEG - lab OWASP Top 10:2025 (aplikasi studi kasus, sengaja rentan untuk keperluan pelatihan)",
+    "type": "project",
+    "license": "proprietary",
+    "require": {
+        "php": ">=8.1",
+        "vlucas/phpdotenv": "^5.6",
+        "robmorgan/phinx": "^0.16",
+        "fakerphp/faker": "^1.23",
+
+        "npm-asset/jquery": "1.12.4",
+        "symfony/yaml": "^7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^10.5"
+    },
+    "autoload": {
+        "classmap": [
+            "app/Controllers/",
+            "app/Models/",
+            "app/Services/",
+            "app/Middleware/",
+            "app/Helpers/"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "config": {
+        "platform": {
+            "php": "8.3.30"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "extra": {
+        "_cwe-1035-note": "npm-asset/jquery sengaja dipatok persis ke 1.12.4 (bukan ^3.7) sebagai demonstrasi CWE-1035 Using Components with Known Vulnerabilities - versi ini punya CVE publik (mis. CVE-2016-10707, CVE-2020-11022/11023). Dependensi ini SENGAJA tidak dipakai/dimuat di halaman mana pun (murni demo audit dependensi lewat 'composer show'/'composer audit') - template AdminLTE yang benar-benar dipakai aplikasi divendor manual di public/assets/vendor/adminlte/ (lihat README). Patch: naikkan ke ^3.7 lalu 'composer update npm-asset/jquery'."
+    },
+    "scripts": {
+        "migrate": "phinx migrate",
+        "seed": "phinx seed:run",
+        "app:install": [
+            "@migrate",
+            "@seed"
+        ]
+    }
+}
