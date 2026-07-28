@@ -1,9 +1,15 @@
 <?php
+
 /** View ubah rekening. Variabel dari PayrollController::updateRekening(): $message. */
 ?>
 <h3>Ubah Rekening Gaji</h3>
-<?php if ($message): ?><div class="alert alert-success"><?= htmlspecialchars($message) ?></div><?php endif; ?>
+<?php if ($message) : ?><div class="alert alert-success"><?= htmlspecialchars($message) ?></div><?php endif; ?>
 <!-- CWE-352: form AdminLTE biasa, tanpa input token CSRF apa pun -->
+<?php
+if (empty($_SESSION['csrf'])) {
+    $_SESSION['csrf'] = bin2hex(random_bytes(32));
+}
+?>
 <form method="post" class="card card-body bg-white" style="max-width:420px">
     <div class="mb-3">
         <label>Nomor rekening baru</label>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Modul Payroll / Slip Gaji.
  * CWE-22 Path Traversal, CWE-352 CSRF, CWE-807 Reliance on Untrusted Input
@@ -45,6 +46,10 @@ class PayrollController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // --- CWE-352: tidak ada pengecekan token CSRF sama sekali ---
+            if (empty($_POST['csrf_token']) || !hash_equals($_SESSION['csrf'], $_POST['csrf_token'])) {
+                http_response_code(403);
+                exit('CSRF Token Invalid');
+            }
             $rekeningBaru = $_POST['no_rekening'] ?? '';
             Karyawan::updateNoRekening($idKaryawan, Crypto::encrypt($rekeningBaru));
             $message = 'Nomor rekening berhasil diubah.';
