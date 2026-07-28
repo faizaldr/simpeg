@@ -7,7 +7,8 @@
  */
 
 // CWE-321: kunci enkripsi hardcode (jangan pernah lakukan ini di produksi).
-define('ENC_KEY', env('ENCRYPTION_KEY'));
+define('ENC_KEY', base64_decode($_ENV['ENCRYPTION_KEY'] ?? ''));
+
 define('ENC_METHOD', 'AES-256-CBC');
 
 class Crypto
