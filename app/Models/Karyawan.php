@@ -62,8 +62,16 @@ class Karyawan
      */
     public static function searchByNamaRaw(string $keyword): array
     {
-        $sql = "SELECT id, nik, nama FROM karyawan WHERE nama LIKE '%$keyword%'";
-        $stmt = Database::rawQuery($sql);
+        // $sql = "SELECT id, nik, nama FROM karyawan WHERE nama LIKE '%$keyword%'";
+        // $stmt = Database::rawQuery($sql);
+
+        $stmt = Database::connection()->prepare(
+            'SELECT id, nik, nama
+         FROM karyawan
+         WHERE nama LIKE ?'
+        );
+
+        $stmt->execute(["%{$keyword}%"]);
 
         return $stmt ? $stmt->fetchAll() : [];
     }
