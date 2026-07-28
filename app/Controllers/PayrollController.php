@@ -18,6 +18,7 @@ class PayrollController
     {
         AuthMiddleware::handle();
 
+        /*
         $file = $_GET['file'] ?? '';
         $path = __DIR__ . '/../../public/uploads/slip_gaji/' . $file; // --- CWE-22: tanpa basename()/realpath() ---
 
@@ -30,6 +31,29 @@ class PayrollController
 
         http_response_code(404);
         echo 'Berkas tidak ditemukan.';
+        */
+
+        $idSlip = (int) ($_GET['id'] ?? 0);
+        $stmt = Database::connection()->prepare('SELECT file_pdf FROM slip_gaji WHERE id =? AND id_karyawan = ?');
+        $stmt->execute([$idSlip, $_SESSION['user_id']] ?? 0);
+        $namaBerkas = $stmt->fetchColumn();
+
+
+        if (!$namaBerkas) {
+            http_response_code(404);
+            exit('Berkas tidak ditemukanx');
+        }
+
+        $folderStorage = realpath(__DIR__ . '/../../public/uploads/slip_gaji');
+        $path = realpath($folderStorage . '/' . basename($namaBerkas));
+        if ($path === false || strpos($path, $folderStorage) !== 0) {
+            http_response_code(404);
+            exit("berkas tidak ditemukany");
+        }
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . basename($path) . '"');
+        readfile($path);
+        exit;
     }
 
     /**
@@ -45,6 +69,12 @@ class PayrollController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // --- CWE-352: tidak ada pengecekan token CSRF sama sekali ---
+
+            if (!Csrf::isValid($_POST['csrf_token'] ?? null)) {
+                http_response_code(403);
+                exit("Token CSRF Tidak valid");
+            }
+
             $rekeningBaru = $_POST['no_rekening'] ?? '';
             Karyawan::updateNoRekening($idKaryawan, Crypto::encrypt($rekeningBaru));
             $message = 'Nomor rekening berhasil diubah.';

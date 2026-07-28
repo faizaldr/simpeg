@@ -6,6 +6,7 @@
 <!-- CWE-352: form AdminLTE biasa, tanpa input token CSRF apa pun -->
 <form method="post" class="card card-body bg-white" style="max-width:420px">
     <div class="mb-3">
+        <?= Csrf::field()?>
         <label>Nomor rekening baru</label>
         <input type="text" name="no_rekening" class="form-control" required>
     </div>

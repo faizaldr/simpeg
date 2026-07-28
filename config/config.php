@@ -30,7 +30,7 @@ session_set_cookie_params(60 * 60 * 24 * 30);
 
 // --- CWE-614 & CWE-1004: cookie sesi TANPA flag Secure/HttpOnly ---
 // (kondisi rentan: sengaja tidak diaktifkan di baseline)
-ini_set('session.cookie_httponly', 0);
+ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_secure', 0);
 
 if (session_status() === PHP_SESSION_NONE) {
