@@ -5,6 +5,7 @@
 <?php if ($message): ?><div class="alert alert-success"><?= htmlspecialchars($message) ?></div><?php endif; ?>
 <!-- CWE-352: form AdminLTE biasa, tanpa input token CSRF apa pun -->
 <form method="post" class="card card-body bg-white" style="max-width:420px">
+    <?= Csrf::field() ?>
     <div class="mb-3">
         <label>Nomor rekening baru</label>
         <input type="text" name="no_rekening" class="form-control" required>

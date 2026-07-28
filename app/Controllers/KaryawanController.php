@@ -19,12 +19,12 @@ class KaryawanController
     {
         AuthMiddleware::handle();
 
-        $idKaryawan = (int) ($_SESSION['id_karyawan'] ?? 1);
+        $idKaryawan = (int) ($_SESSION['user_id'] ?? 1);
         $message = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             // --- CWE-639: id_karyawan diambil dari hidden input form, bukan dari sesi ---
-            $idDariForm = (int) ($_POST['id_karyawan'] ?? 0);
+            $idDariForm = (int) $idKaryawan;
             $nama = $_POST['nama'] ?? '';
 
             Karyawan::updateNama($idDariForm, $nama);

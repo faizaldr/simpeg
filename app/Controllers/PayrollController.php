@@ -18,7 +18,7 @@ class PayrollController
     {
         AuthMiddleware::handle();
 
-        $file = $_GET['file'] ?? '';
+        /*$file = $_GET['file'] ?? '';
         $path = __DIR__ . '/../../public/uploads/slip_gaji/' . $file; // --- CWE-22: tanpa basename()/realpath() ---
 
         if ($file !== '' && file_exists($path)) {
@@ -30,7 +30,26 @@ class PayrollController
 
         http_response_code(404);
         echo 'Berkas tidak ditemukan.';
-    }
+        */
+        $idSlip = (int) ($_GET['id'] ?? 0);
+        $stmt = Database::connection()->prepare('SELECT file_pdf FROM slip_gaji WHERE id =? AND id_karyawan = ?');
+        $namaBerkas = $stmt->fetchColumn();
+        if (!$namaBerkas) {
+            http_response_code(404);
+            exit('Berkas tidak ditemukan');
+        }
+        $folderStorage = realpath(__DIR__ . '/../uploads/slip_gaji');
+        $path = realpath($folderStorage . '/' . basename($namaBerkas));
+        if ($path === false || strpos($path, $folderStorage) !== 0) {
+            http_response_code(404);
+            exit("berkas tidak ditemukan");
+        }
+        header('Content-Type: application/octet-stream');
+        header('Content-Disposition: attachment; filename="' . basename($path) . '"');
+        readfile($path);
+        exit;
+                
+            }
 
     /**
      * CWE-352 Cross-Site Request Forgery (CSRF): form ubah rekening TIDAK
@@ -44,7 +63,13 @@ class PayrollController
         $message = null;
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            // --- CWE-352: tidak ada pengecekan token CSRF sama sekali ---
+            // --- TAMBAHKAN VALIDASI CSRF ---
+        if (!isset($_POST['csrf_token']) || !Csrf::isValid($_POST['csrf_token'])) {
+            http_response_code(403);
+            die('CSRF token validation failed');
+        }
+        // --- AKHIR TAMBAHAN ---
+        
             $rekeningBaru = $_POST['no_rekening'] ?? '';
             Karyawan::updateNoRekening($idKaryawan, Crypto::encrypt($rekeningBaru));
             $message = 'Nomor rekening berhasil diubah.';
