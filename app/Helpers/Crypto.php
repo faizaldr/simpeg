@@ -7,7 +7,7 @@
  */
 
 // CWE-321: kunci enkripsi hardcode (jangan pernah lakukan ini di produksi).
-define('ENC_KEY', '1234567890abcdef');
+define('ENC_KEY', env('ENCRYPTION_KEY'));
 define('ENC_METHOD', 'AES-256-CBC');
 
 class Crypto

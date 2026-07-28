@@ -9,7 +9,7 @@
         "robmorgan/phinx": "^0.16",
         "fakerphp/faker": "^1.23",
 
-        "npm-asset/jquery": "1.12.4",
+        "npm-asset/jquery": "^3.7",
         "symfony/yaml": "^7.0"
     },
     "require-dev": {

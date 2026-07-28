@@ -1,0 +1,9 @@
+<?php
+$key = base64_encode(random_bytes(32));
+$env = file_get_contents('.env');
+$env = preg_replace(
+    '/^ENCRYPTION_KEY=.*$/m',
+    "ENCRYPTION_KEY=$key",
+    $env
+);
+file_put_contents('.env', $env);

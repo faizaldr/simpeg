@@ -18,6 +18,16 @@ class Auth
         return md5($plain) === $hash;
     }
 
+    //     public static function hashPassword(string $plain): string
+    // {
+    //     return password_hash($plain, PASSWORD_ARGON2ID);
+    // }
+
+    // public static function verifyPassword(string $plain, string $hash): bool
+    // {
+    //     return password_verify($plain, $hash);
+    // }
+
     /**
      * CWE-916 Insufficient Password Hash Effort: cost bcrypt sengaja
      * diturunkan drastis. Dipakai HANYA untuk demo perbandingan kecepatan

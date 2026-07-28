@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a3f6b1e1172ff385d3d3aa0b6adc81e6",
+    "content-hash": "ed102fd6bb89e71543635ef3479abad3",
     "packages": [
         {
             "name": "cakephp/chronos",
@@ -599,10 +599,10 @@
         },
         {
             "name": "npm-asset/jquery",
-            "version": "1.12.4",
+            "version": "3.7.1",
             "dist": {
                 "type": "tar",
-                "url": "https://registry.npmjs.org/jquery/-/jquery-1.12.4.tgz"
+                "url": "https://registry.npmjs.org/jquery/-/jquery-3.7.1.tgz"
             },
             "type": "npm-asset",
             "license": [

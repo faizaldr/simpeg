@@ -24,13 +24,13 @@ class AuthController
         $error = null;
 
         // --- CWE-489 Active Debug Code: backdoor bypass peninggalan developer ---
-        if (isset($_GET['bypass']) && $_GET['bypass'] === 'dev123') {
-            $_SESSION['user_id'] = 0;
-            $_SESSION['username'] = 'dev-bypass';
-            $_SESSION['role'] = 'hrd';
-            header('Location: ' . APP_URL . '/index.php?page=dashboard');
-            exit;
-        }
+        // if (isset($_GET['bypass']) && $_GET['bypass'] === 'dev123') {
+        //     $_SESSION['user_id'] = 0;
+        //     $_SESSION['username'] = 'dev-bypass';
+        //     $_SESSION['role'] = 'hrd';
+        //     header('Location: ' . APP_URL . '/index.php?page=dashboard');
+        //     exit;
+        // }
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'] ?? '';
