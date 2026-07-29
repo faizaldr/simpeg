@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Layanan unggah & konversi dokumen kepegawaian.
  */
@@ -42,8 +43,10 @@ class DokumenService
         $tujuan = __DIR__ . '/../../public/uploads/dokumen/' . $namaAsli;
         move_uploaded_file($tmpPath, $tujuan);
 
+        $soffice = '"C:\\Program Files\\LibreOffice\\program\\soffice.exe"';
+
         // --- CWE-78: nama berkas (dari input pengguna) digabung langsung ke perintah shell ---
-        $perintah = 'libreoffice --headless --convert-to pdf ' . $tujuan . ' 2>&1';
+        $perintah = $soffice . ' --headless --convert-to pdf ' . escapeshellarg($tujuan) . ' 2>&1';
         exec($perintah, $hasilBaris);
 
         return implode("\n", $hasilBaris);
