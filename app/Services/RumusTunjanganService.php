@@ -9,12 +9,17 @@ class RumusTunjanganService
 {
     public static function simpanDanHitungContoh(string $rumusBaru): float|int|null
     {
-        PengaturanSistem::set('rumus_tunjangan', $rumusBaru);
-
         $masa_kerja = 5; // contoh variabel yang tersedia untuk rumus
 
+        $token = str_replace('masa_kerja', (string) $masa_kerja, $rumusBaru);
+        if (!preg_match('/^[\d\s+\-*\/().]+$/', $token))
+            exit('Rumus Mengandung Karakter yang diijinkan');
+
+        PengaturanSistem::set('rumus_tunjangan', $rumusBaru);
+
+
         // --- CWE-94: eval() menjalankan rumus sebagai kode PHP sungguhan ---
-        eval('$hasil = ' . $rumusBaru . ';');
+        eval ('$hasil = ' . $rumusBaru . ';');
 
         return $hasil ?? null;
     }
