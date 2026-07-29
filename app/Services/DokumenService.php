@@ -15,6 +15,15 @@ class DokumenService
     {
         // --- CWE-434: validasi hanya dari EKSTENSI nama berkas kiriman klien ---
         $extBolehDiterima = ['jpg', 'jpeg', 'png', 'pdf'];
+        $mimeTypeAlowed = ['image/jpeg' => 'jpg', "image/png" => 'png', 'application/pdf' => 'pdf'];
+
+        $mimeTypeFile = mime_content_type($tmpPath);
+
+        if(!isset($mimeTypeAlowed[$mimeTypeFile])){
+            http_response_code(400);
+            exit("jenis berkas tidak diizinkan");
+        }
+
         $ext = strtolower(pathinfo($namaAsli, PATHINFO_EXTENSION));
 
         if (!in_array($ext, $extBolehDiterima, true)) {

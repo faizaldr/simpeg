@@ -12,20 +12,47 @@ class CutiService
 
     public static function ajukan(int $idKaryawan, int $jumlahHari, string $catatan): string
     {
-        // Langkah 1: BACA saldo
-        $terpakai = Cuti::sumSaldoTerpakai($idKaryawan);
-        $sisaSaldo = self::JATAH_TAHUNAN - $terpakai;
+        // Row Locking
+        $db = Database::connection();
+        $db->beginTransaction();
 
-        // (jeda sengaja tidak ada penguncian — bandingkan dengan versi terpatch di tutorial)
+        try {
+            $stmt = $db->prepare(
+                'SELECT COALESCE(SUM(saldo_dipakai),0) AS terpakai FROM cuti
+                    WHERE id_karyawan = ? AND status = "disetujui" FOR UPDATE'
+            );
+            $stmt->execute([$idKaryawan]);
+            $sisaSaldo = self::JATAH_TAHUNAN - (int) $stmt->fetchColumn();
 
-        // Langkah 2: PERIKSA kecukupan
-        if ($jumlahHari > 0 && $jumlahHari <= $sisaSaldo) {
-            // Langkah 3: TULIS pengajuan baru — tanpa transaksi/SELECT ... FOR UPDATE
-            Cuti::insert($idKaryawan, $jumlahHari, $catatan);
+            if ($jumlahHari > 0 && $jumlahHari <= $sisaSaldo) {
+                Cuti::insert($idKaryawan, $jumlahHari, $catatan);
+                $message = "Pengajuan $jumlahHari hari berhasil disetujui";
+            } else {
+                $message = "Pengajuan ditolak, sisa saldo tidak cukup ($jumlahHari) hari ";
+            }
 
-            return "Pengajuan $jumlahHari hari berhasil disetujui otomatis (sisa saldo saat cek: $sisaSaldo).";
+            $db->commit();
+
+        } catch (Throwable $e) {
+            $db->rollBack();
+            throw $e;
         }
+        return $message;
 
-        return "Pengajuan ditolak, saldo tidak cukup (sisa: $sisaSaldo).";
+        // Langkah 1: BACA saldo
+        // $terpakai = Cuti::sumSaldoTerpakai($idKaryawan);
+        // $sisaSaldo = self::JATAH_TAHUNAN - $terpakai;
+
+        // // (jeda sengaja tidak ada penguncian — bandingkan dengan versi terpatch di tutorial)
+
+        // // Langkah 2: PERIKSA kecukupan
+        // if ($jumlahHari > 0 && $jumlahHari <= $sisaSaldo) {
+        //     // Langkah 3: TULIS pengajuan baru — tanpa transaksi/SELECT ... FOR UPDATE
+        //     Cuti::insert($idKaryawan, $jumlahHari, $catatan);
+
+        //     return "Pengajuan $jumlahHari hari berhasil disetujui otomatis (sisa saldo saat cek: $sisaSaldo).";
+        // }
+
+        // return "Pengajuan ditolak, saldo tidak cukup (sisa: $sisaSaldo).";
     }
 }
