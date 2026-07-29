@@ -11,6 +11,7 @@
  */
 $pageTitle = $pageTitle ?? 'SIMPEG';
 $role = Auth::currentRole();
+header("Content-Security-Policy: default-src 'self' https://cdn.jsdelivr.net; script-src 'self' https://cdn.jsdelivr.net");
 ?>
 <!DOCTYPE html>
 <html lang="id">

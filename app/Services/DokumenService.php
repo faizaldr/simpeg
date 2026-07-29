@@ -39,13 +39,45 @@ class DokumenService
      */
     public static function konversiKePdf(string $tmpPath, string $namaAsli): string
     {
-        $tujuan = __DIR__ . '/../../public/uploads/dokumen/' . $namaAsli;
-        move_uploaded_file($tmpPath, $tujuan);
 
-        // --- CWE-78: nama berkas (dari input pengguna) digabung langsung ke perintah shell ---
-        $perintah = 'libreoffice --headless --convert-to pdf ' . $tujuan . ' 2>&1';
-        exec($perintah, $hasilBaris);
+        // $tujuan = __DIR__ . '/../../public/uploads/dokumen/' . $namaAsli;
+        // move_uploaded_file($tmpPath, $tujuan);
 
-        return implode("\n", $hasilBaris);
+        // $soffice = '"C:\\Program Files\\LibreOffice\\program\\soffice.exe"';
+
+        // // --- CWE-78: nama berkas (dari input pengguna) digabung langsung ke perintah shell ---
+        // $perintah = $soffice . ' --headless --convert-to pdf ' . $tujuan . ' 2>&1';
+        // exec($perintah, $hasilBaris);
+
+        // return implode("\n", $hasilBaris);
+
+        $extension = pathinfo($_FILES['dok']['name'], PATHINFO_EXTENSION);
+        $nama = bin2hex(random_bytes(16)) . '.' . $extension;
+
+        $tujuan = __DIR__ . '/../../public/uploads/dokumen/' . $nama;
+
+        move_uploaded_file($_FILES['dok']['tmp_name'], $tujuan);
+
+        $soffice = 'C:\\Program Files\\LibreOffice\\program\\soffice.exe';
+
+        $proses = proc_open(
+            [
+                $soffice,
+                '--headless',
+                '--convert-to',
+                'pdf',
+                '--outdir',
+                dirname($tujuan),
+                $tujuan
+            ],
+            [
+                1 => ['pipe', 'w'],
+                2 => ['pipe', 'w'],
+            ],
+            $pipes
+        );
+        $hasil = stream_get_contents($pipes[1]);
+        proc_close($proses);
+        return $hasil;
     }
 }

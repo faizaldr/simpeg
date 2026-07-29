@@ -19,6 +19,8 @@
             <form action="/auth/sso_login.php" method="post">
                 <div class="mb-3">
                     <input type="text" name="username" class="form-control" placeholder="Username kantor pusat (uid)" required>
+                    <input type="text" name="password" class="form-control" placeholder="password" required>
+
                 </div>
                 <button type="submit" class="btn btn-warning w-100">Masuk lewat SSO</button>
             </form>

@@ -90,12 +90,17 @@ class AuthController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $username = $_POST['username'] ?? '';
+            $password = $_POST['password'] ?? '';
+
+            $usernameFilter = ldap_escape($username, '', LDAP_ESCAPE_FILTER);
 
             // --- CWE-90: filter dibentuk lewat konkatenasi string, tanpa ldap_escape() ---
-            $filter = '(uid=' . $username . ')';
+            // $filter = '(uid=' . $username . ')';
+            $filter = '(uid=' . $usernameFilter . ')';
+
             $entry = SimulatedLdap::search($filter);
 
-            if ($entry) {
+            if ($entry && SimulatedLdap::bind($entry['uid'], $password)) {
                 Auth::login(['id' => 0, 'username' => $entry['uid'], 'role' => $entry['role']]);
                 header('Location: ' . APP_URL . '/index.php?page=dashboard');
                 exit;
